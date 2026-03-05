@@ -1,5 +1,4 @@
 import logging
-from parser import GranolarParser
 from typing import Dict, Any
 from utils import _get_header, _verify, _get_env_variable
 import base64
@@ -11,7 +10,7 @@ logger.setLevel(logging.INFO)
 PUBLIC_KEY = _get_env_variable("DISCORD_PUBLIC_KEY")
 
 
-def main(event: Dict[str, Any], ctx: Any) -> Dict[str, Any]:
+def handler(event: Dict[str, Any], ctx: Any) -> Dict[str, Any]:
     headers = event.get("headers")
     if not headers:
         return {"statusCode": 400, "body": "Missing headers."}
@@ -29,6 +28,8 @@ def main(event: Dict[str, Any], ctx: Any) -> Dict[str, Any]:
         return {"statusCode": 401, "body": "Invalid request signature."}
 
     interaction = json.loads(raw_body.decode("utf-8"))
+
+    # Discord ping (type 1) — required for endpoint verification
     if interaction.get("type") == 1:
         return {
             "statusCode": 200,
@@ -36,38 +37,23 @@ def main(event: Dict[str, Any], ctx: Any) -> Dict[str, Any]:
             "body": json.dumps({"type": 1}),
         }
 
-    source = "https://example.com/granolar-article"
-    parser = GranolarParser(source)
-
-    try:
-        html_text = parser.read_html()
-        script_text = parser.extract_second_to_last_script(html_text)
-        html_payload = parser.decode_payload(script_text)
-        markdown_content = parser.html_to_markdown(html_payload)
-    except Exception as e:
-        logging.error(f"Error processing the source: {e}")
-        return {"statusCode": 500, "body": str(e)}
-
+    # Slash command (type 2)
     if interaction.get("type") == 2:
         name = (interaction.get("data") or {}).get("name")
 
-        if name == "ping":
+        if name == "hello":
             return {
                 "statusCode": 200,
-                "headers": {"content-type": "application/json"},
-                "body": json.dumps({"type": 4, "data": {"content": markdown_content}}),
+                "headers": {"Content-Type": "application/json"},
+                "body": json.dumps({"type": 4, "data": {"content": "Hello, World!"}}),
             }
 
         return {
             "statusCode": 200,
-            "headers": {"content-type": "application/json"},
+            "headers": {"Content-Type": "application/json"},
             "body": json.dumps(
                 {"type": 4, "data": {"content": f"Unknown command: {name}"}}
             ),
         }
 
     return {"statusCode": 200, "body": ""}
-
-
-if __name__ == "__main__":
-    result = main({}, {})

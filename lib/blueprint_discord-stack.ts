@@ -6,7 +6,10 @@ import * as s3 from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 
 export interface BlueprintDiscordStackProps extends cdk.StackProps {
+  discordAppId: string;
   discordPublicKey: string;
+  discordGuildId: string;
+  discordBotToken: string;
 }
 
 export class BlueprintDiscordStack extends cdk.Stack {
@@ -35,7 +38,10 @@ export class BlueprintDiscordStack extends cdk.Stack {
       }),
       timeout: cdk.Duration.seconds(20),
       environment: {
+        DISCORD_APP_ID: props.discordAppId,
         DISCORD_PUBLIC_KEY: props.discordPublicKey,
+        DISCORD_GUILD_ID: props.discordGuildId,
+        DISCORD_BOT_TOKEN: props.discordBotToken,
         SUMMARY_BUCKET_NAME: s3SummaryBucket.bucketName,
       },
     });
