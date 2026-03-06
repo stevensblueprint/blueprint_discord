@@ -45,7 +45,7 @@ def handler(event: Dict[str, Any], ctx: Any) -> Dict[str, Any]:
             return {
                 "statusCode": 200,
                 "headers": {"Content-Type": "application/json"},
-                "body": json.dumps({"type": 4, "data": {"content": "Hello, World!"}}),
+                "body": json.dumps({"type": 4, "data": {"content": "Hello, I'm stevens-bot!"}}),
             }
 
         return {

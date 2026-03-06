@@ -26,6 +26,7 @@ export class BlueprintDiscordStack extends cdk.Stack {
       code: lambda.Code.fromAsset("lambda", {
         bundling: {
           image: lambda.Runtime.PYTHON_3_11.bundlingImage,
+          platform: "linux/amd64",
           command: [
             "bash",
             "-lc",
