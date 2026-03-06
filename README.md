@@ -36,26 +36,26 @@ npm run register
 
 Run this after every deploy and whenever you add or remove commands. If `GUILD_ID` is set, commands are registered to that guild (instant). Otherwise they are registered globally (can take up to 1 hour to propagate).
 
+## Commands
+
+### `/env store file:<attachment> passphrase:<string>`
+
+Encrypts a `.env` file with the given passphrase and stores it in S3. The bot replies ephemerally (visible only to you) with a UUID key you'll use to retrieve the file later.
+
+The UUID key is valid for **24 hours** after upload. The underlying file is retained in S3 for **1 year**.
+
+### `/env get name:<uuid> passphrase:<string>`
+
+Fetches the stored file by its UUID key, decrypts it with the passphrase, and replies ephemerally with the file contents.
+
+- Wrong passphrase → `"Invalid passphrase or corrupted file."`
+- Key not found or expired → `"File not found."`
+
 ## Adding a new command
 
 ### 1. Register it with Discord
 
-Add an entry to the `commands` array in `scripts/register_commands.ts`:
-
-```ts
-const commands = [
-  {
-    name: 'hello',
-    description: 'Replies with Hello, World!',
-  },
-  {
-    name: 'mycommand',
-    description: 'Description of my command',
-  },
-];
-```
-
-Then run:
+Add an entry to the `commands` array in `scripts/register_commands.ts`, then run:
 
 ```bash
 npm run register

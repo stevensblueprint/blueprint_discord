@@ -19,6 +19,12 @@ export class BlueprintDiscordStack extends cdk.Stack {
     const s3SummaryBucket = new s3.Bucket(this, "SummaryBucket", {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
+      lifecycleRules: [
+        {
+          prefix: "envfiles/",
+          expiration: cdk.Duration.days(365),
+        },
+      ],
     });
     const fn = new lambda.Function(this, "DiscordInteractionHandler", {
       runtime: lambda.Runtime.PYTHON_3_11,
@@ -37,7 +43,7 @@ export class BlueprintDiscordStack extends cdk.Stack {
           ],
         },
       }),
-      timeout: cdk.Duration.seconds(20),
+      timeout: cdk.Duration.seconds(29),
       environment: {
         DISCORD_APP_ID: props.discordAppId,
         DISCORD_PUBLIC_KEY: props.discordPublicKey,

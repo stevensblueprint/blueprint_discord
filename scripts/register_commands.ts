@@ -7,8 +7,48 @@ const GUILD_ID = process.env.GUILD_ID;
 
 const commands = [
   {
-    name: 'hello',
-    description: 'Replies with Hello, World!',
+    name: 'env',
+    description: 'Manage encrypted .env files',
+    options: [
+      {
+        type: 1, // SUB_COMMAND
+        name: 'store',
+        description: 'Encrypt and store a .env file',
+        options: [
+          {
+            type: 11, // ATTACHMENT
+            name: 'file',
+            description: 'The .env file to store',
+            required: true,
+          },
+          {
+            type: 3, // STRING
+            name: 'passphrase',
+            description: 'Passphrase used to encrypt the file',
+            required: true,
+          },
+        ],
+      },
+      {
+        type: 1, // SUB_COMMAND
+        name: 'get',
+        description: 'Retrieve and decrypt a stored .env file',
+        options: [
+          {
+            type: 3, // STRING
+            name: 'name',
+            description: 'The UUID key returned when storing the file',
+            required: true,
+          },
+          {
+            type: 3, // STRING
+            name: 'passphrase',
+            description: 'Passphrase used to decrypt the file',
+            required: true,
+          },
+        ],
+      },
+    ],
   },
 ];
 
