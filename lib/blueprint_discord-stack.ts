@@ -4,6 +4,7 @@ import * as apigwv2 from "aws-cdk-lib/aws-apigatewayv2";
 import * as integrations from "aws-cdk-lib/aws-apigatewayv2-integrations";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
+import * as path from 'path';
 
 export interface BlueprintDiscordStackProps extends cdk.StackProps {
   discordAppId: string;
@@ -32,6 +33,7 @@ export class BlueprintDiscordStack extends cdk.Stack {
       code: lambda.Code.fromAsset("lambda", {
         bundling: {
           image: lambda.Runtime.PYTHON_3_11.bundlingImage,
+          user: 'root',
           platform: "linux/amd64",
           command: [
             "bash",

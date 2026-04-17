@@ -100,6 +100,18 @@ def handle_env_get(interaction: Dict[str, Any]) -> Dict[str, Any]:
         }),
     }
 
+def handle_designer() -> Dict[str, Any]:
+    return {
+        "statusCode": 200,
+        "headers": {"Content-Type": "application/json"},
+        "body": json.dumps({
+            "type": 4,
+            "data": {
+                "content": "Designer command is under construction. Stay tuned!",
+                "flags": 64,
+            },
+        }),
+    }
 
 def handler(event: Dict[str, Any], ctx: Any) -> Dict[str, Any]:
     headers = event.get("headers")
@@ -138,6 +150,10 @@ def handler(event: Dict[str, Any], ctx: Any) -> Dict[str, Any]:
                 return handle_env_store(interaction)
             if subcommand == "get":
                 return handle_env_get(interaction)
+            
+        if name == "designer":
+            return handle_designer()
+            
 
         return {
             "statusCode": 200,

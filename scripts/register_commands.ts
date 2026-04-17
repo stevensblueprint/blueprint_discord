@@ -50,6 +50,10 @@ const commands = [
       },
     ],
   },
+  {
+    name: 'designer',
+    description: 'testing designer command'
+  }
 ];
 
 const url = GUILD_ID
